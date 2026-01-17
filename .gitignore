@@ -1,0 +1,4 @@
+.build/
+.swiftpm/
+HotSwitch.app/
+AppIcon_backup.icns
