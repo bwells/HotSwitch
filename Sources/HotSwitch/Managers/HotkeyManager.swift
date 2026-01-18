@@ -15,8 +15,10 @@ class HotkeyManager {
     let onNextApp: () -> Void
     let onPreviousApp: () -> Void
 
-    // Tab key code
+    // Key codes
     private let tabKeyCode: CGKeyCode = 48
+    private let leftArrowKeyCode: CGKeyCode = 123
+    private let rightArrowKeyCode: CGKeyCode = 124
 
     init(
         onSwitcherShow: @escaping () -> Void,
@@ -153,6 +155,21 @@ class HotkeyManager {
                     }
                 }
                 return nil
+            }
+
+            // Arrow key navigation while switcher is visible
+            if isSwitcherVisible {
+                if keyCode == rightArrowKeyCode {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.onNextApp()
+                    }
+                    return nil
+                } else if keyCode == leftArrowKeyCode {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.onPreviousApp()
+                    }
+                    return nil
+                }
             }
         }
 
