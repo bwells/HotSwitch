@@ -17,31 +17,50 @@ A macOS menu bar app that provides an alternative application switcher (Option+T
 ## Building
 
 ```bash
-cd HotSwitch
-swift build
+./build.sh
 ```
+
+This builds the app, creates the `HotSwitch.app` bundle, and code signs it.
 
 ## Running
 
 ```bash
-.build/debug/HotSwitch
+open HotSwitch.app
 ```
 
 Or build and run in one command:
 
 ```bash
-swift build && .build/debug/HotSwitch
+./build.sh && open HotSwitch.app
 ```
 
 ## Usage
 
-1. **Grant Accessibility Permission**: On first launch, the app will prompt you to grant Accessibility permission in System Settings > Privacy & Security > Accessibility
-2. **Configure Hot Apps**: Click the menu bar icon to see running apps. Click the flame icon next to any app to mark it as "hot"
-3. **Switch Apps**: Press Option+Tab to show the switcher
-   - Tab: Move to next app
-   - Shift+Tab: Move to previous app
-   - Release Option: Switch to selected app
-   - Escape: Cancel
+### Initial Setup
+
+1. **Launch the app** - A menu bar icon (stacked cards) will appear
+2. **Grant Accessibility Permission** - The app will prompt you to grant permission in System Settings > Privacy & Security > Accessibility. This is required for global hotkey capture.
+3. **Restart the app** after granting permission
+
+### Configuring Hot Apps
+
+Click the menu bar icon to open the configuration panel:
+- Running apps are listed with a flame icon
+- Click the flame to toggle an app as "hot"
+- Hot apps appear in a separate section at the top
+- Hot apps will always appear first in the switcher, in the order listed
+
+### Switching Apps
+
+| Key | Action |
+|-----|--------|
+| **Option+Tab** | Open the switcher (first hot app selected) |
+| **Tab** | Move to next app |
+| **Shift+Tab** | Move to previous app |
+| **Right Arrow** | Move to next app |
+| **Left Arrow** | Move to previous app |
+| **Release Option** | Switch to selected app |
+| **Escape** | Cancel and close switcher |
 
 ## How It Works
 
@@ -54,9 +73,11 @@ The app runs without a Dock icon (menu bar only) and uses a global event tap to 
 ```
 HotSwitch/
 ├── Package.swift
+├── build.sh                         # Build and sign script
+├── LICENSE                          # GPL 3.0
 ├── Sources/
 │   └── HotSwitch/
-│       ├── HotSwitchApp.swift      # Main app entry point
+│       ├── HotSwitchApp.swift       # Main app entry point
 │       ├── AppDelegate.swift        # App lifecycle management
 │       ├── Managers/
 │       │   ├── HotkeyManager.swift  # Global hotkey capture
@@ -68,5 +89,10 @@ HotSwitch/
 │       └── Models/
 │           └── HotAppsStore.swift   # Hot app persistence
 └── Resources/
-    └── Info.plist
+    ├── Info.plist
+    └── AppIcon.icns
 ```
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
