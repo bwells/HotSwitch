@@ -8,17 +8,27 @@ class HotkeyManager {
     private var eventTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
     private var isSwitcherVisible = false
-    private var isOptionHeld = false
+    private var isModifierHeld = false
 
     let onSwitcherShow: () -> Void
     let onSwitcherHide: () -> Void
     let onNextApp: () -> Void
     let onPreviousApp: () -> Void
 
+    // Configurable modifier key
+    var modifierKey: ModifierKey = .option
+
     // Key codes
     private let tabKeyCode: CGKeyCode = 48
     private let leftArrowKeyCode: CGKeyCode = 123
     private let rightArrowKeyCode: CGKeyCode = 124
+
+    private var currentModifierMask: CGEventFlags {
+        switch modifierKey {
+        case .option: return .maskAlternate
+        case .command: return .maskCommand
+        }
+    }
 
     init(
         onSwitcherShow: @escaping () -> Void,
@@ -97,16 +107,16 @@ class HotkeyManager {
         let flags = event.flags
         let keyCode = CGKeyCode(event.getIntegerValueField(.keyboardEventKeycode))
 
-        // Handle flags changed (Option key press/release)
+        // Handle flags changed (modifier key press/release)
         if type == .flagsChanged {
-            let optionPressed = flags.contains(.maskAlternate)
+            let modifierPressed = flags.contains(currentModifierMask)
 
-            if optionPressed && !isOptionHeld {
-                // Option just pressed
-                isOptionHeld = true
-            } else if !optionPressed && isOptionHeld {
-                // Option just released
-                isOptionHeld = false
+            if modifierPressed && !isModifierHeld {
+                // Modifier just pressed
+                isModifierHeld = true
+            } else if !modifierPressed && isModifierHeld {
+                // Modifier just released
+                isModifierHeld = false
                 if isSwitcherVisible {
                     DispatchQueue.main.async { [weak self] in
                         self?.onSwitcherHide()
@@ -119,9 +129,9 @@ class HotkeyManager {
 
         // Handle key down
         if type == .keyDown {
-            // Check for Option+Tab
-            if flags.contains(.maskAlternate) && keyCode == tabKeyCode {
-                logger.info("Option+Tab detected!")
+            // Check for Modifier+Tab
+            if flags.contains(currentModifierMask) && keyCode == tabKeyCode {
+                logger.info("\(self.modifierKey.displayName)+Tab detected!")
                 let shiftHeld = flags.contains(.maskShift)
 
                 DispatchQueue.main.async { [weak self] in

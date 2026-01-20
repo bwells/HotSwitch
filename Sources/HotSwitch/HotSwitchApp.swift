@@ -9,6 +9,7 @@ struct HotSwitchApp: App {
             MenuBarView()
                 .environmentObject(appDelegate.hotAppsStore)
                 .environmentObject(appDelegate.appManager)
+                .environmentObject(appDelegate.settingsStore)
         }
         .menuBarExtraStyle(.window)
     }

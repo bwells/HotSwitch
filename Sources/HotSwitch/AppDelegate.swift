@@ -1,11 +1,14 @@
 import AppKit
 import SwiftUI
+import Combine
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var hotkeyManager: HotkeyManager!
     let appManager = AppManager()
     let hotAppsStore = HotAppsStore()
+    let settingsStore = SettingsStore()
     var switcherWindow: SwitcherWindow?
+    private var cancellables = Set<AnyCancellable>()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Initialize hotkey manager with callbacks
@@ -23,6 +26,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self?.switcherWindow?.selectPrevious()
             }
         )
+
+        // Set initial modifier key from settings
+        hotkeyManager.modifierKey = settingsStore.modifierKey
+
+        // Listen for modifier key changes
+        settingsStore.$modifierKey
+            .sink { [weak self] newModifier in
+                self?.hotkeyManager.modifierKey = newModifier
+            }
+            .store(in: &cancellables)
 
         // Check and request accessibility permissions
         checkAccessibilityPermissions()

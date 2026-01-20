@@ -4,6 +4,7 @@ import AppKit
 struct MenuBarView: View {
     @EnvironmentObject var hotAppsStore: HotAppsStore
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var settingsStore: SettingsStore
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -73,8 +74,30 @@ struct MenuBarView: View {
             Divider()
                 .padding(.vertical, 4)
 
+            // Settings Section
+            Text("Shortcut")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .padding(.horizontal, 12)
+                .padding(.top, 4)
+                .padding(.bottom, 4)
+
+            HStack {
+                Text("Modifier Key")
+                Spacer()
+                Picker("", selection: $settingsStore.modifierKey) {
+                    ForEach(ModifierKey.allCases, id: \.self) { key in
+                        Text("\(key.symbol) \(key.displayName)").tag(key)
+                    }
+                }
+                .pickerStyle(.menu)
+                .frame(width: 120)
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 4)
+
             // Help text
-            Text("Press Option+Tab to switch")
+            Text("Press \(settingsStore.modifierKey.shortcutDescription) to switch")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 12)
@@ -203,4 +226,5 @@ struct NotRunningHotAppRow: View {
     MenuBarView()
         .environmentObject(HotAppsStore())
         .environmentObject(AppManager())
+        .environmentObject(SettingsStore())
 }

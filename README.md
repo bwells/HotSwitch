@@ -6,8 +6,8 @@ A macOS menu bar app that provides an alternative application switcher (Option+T
 
 - **Hot Apps**: Pin your favorite apps to always appear first in the switcher
 - **Recency Sorting**: Non-hot apps are sorted by most recently used
-- **Global Hotkey**: Option+Tab to activate (doesn't conflict with Cmd+Tab)
-- **Menu Bar Interface**: Configure hot apps from the menu bar
+- **Configurable Hotkey**: Choose between Option+Tab or Cmd+Tab
+- **Menu Bar Interface**: Configure hot apps and shortcut from the menu bar
 
 ## Requirements
 
@@ -50,23 +50,31 @@ Click the menu bar icon to open the configuration panel:
 - Hot apps appear in a separate section at the top
 - Hot apps will always appear first in the switcher, in the order listed
 
+### Configuring the Shortcut
+
+Click the menu bar icon and use the **Modifier Key** dropdown under "Shortcut" to choose between:
+- **Option** (⌥Tab) - Default, doesn't conflict with system Cmd+Tab
+- **Command** (⌘Tab) - Replaces the system app switcher
+
 ### Switching Apps
 
 | Key | Action |
 |-----|--------|
-| **Option+Tab** | Open the switcher (first hot app selected) |
+| **Modifier+Tab** | Open the switcher (first hot app selected) |
 | **Tab** | Move to next app |
 | **Shift+Tab** | Move to previous app |
 | **Right Arrow** | Move to next app |
 | **Left Arrow** | Move to previous app |
-| **Release Option** | Switch to selected app |
+| **Release Modifier** | Switch to selected app |
 | **Escape** | Cancel and close switcher |
+
+*Modifier is Option or Command, depending on your setting.*
 
 ## How It Works
 
 Hot apps always appear first in the switcher (in the order you configured them). Other running apps appear after, sorted by how recently they were used.
 
-The app runs without a Dock icon (menu bar only) and uses a global event tap to capture the Option+Tab hotkey.
+The app runs without a Dock icon (menu bar only) and uses a global event tap to capture the hotkey. You can configure it to use either Option+Tab (default) or Cmd+Tab to replace the system switcher.
 
 ## Project Structure
 
@@ -87,7 +95,8 @@ HotSwitch/
 │       │   ├── SwitcherWindow.swift # Floating panel
 │       │   └── MenuBarView.swift    # Menu bar interface
 │       └── Models/
-│           └── HotAppsStore.swift   # Hot app persistence
+│           ├── HotAppsStore.swift   # Hot app persistence
+│           └── SettingsStore.swift  # User preferences
 └── Resources/
     ├── Info.plist
     └── AppIcon.icns
