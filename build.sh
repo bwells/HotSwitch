@@ -17,10 +17,8 @@ mkdir -p HotSwitch.app/Contents/Resources
 cp .build/debug/HotSwitch HotSwitch.app/Contents/MacOS/
 cp Resources/Info.plist HotSwitch.app/Contents/
 
-# Copy icon if it exists in the bundle (preserve across rebuilds)
-if [ -f "HotSwitch.app/Contents/Resources/AppIcon.icns" ]; then
-    echo "Icon already present"
-fi
+# Copy icon into bundle
+cp Resources/AppIcon.icns HotSwitch.app/Contents/Resources/
 
 # Re-sign to maintain consistent identity
 codesign --force --deep --sign - HotSwitch.app
