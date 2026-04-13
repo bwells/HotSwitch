@@ -222,9 +222,11 @@ struct NotRunningHotAppRow: View {
     }
 }
 
+#if DEBUG && canImport(PreviewsMacros)
 #Preview {
     MenuBarView()
         .environmentObject(HotAppsStore())
         .environmentObject(AppManager())
         .environmentObject(SettingsStore())
 }
+#endif
